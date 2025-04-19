@@ -50,15 +50,17 @@
         }
         async function loadAndInit() {
             try {
-                const gameData = await pakoInflateFile(gamedata);
-                document.getElementById('progress').style.width = '40%';
-                const engineData = await pakoInflateFile("index.wasm");
                 document.getElementById('progress').style.width = '50%';
-                await engine.preloadFile(gamedata);
-                document.getElementById('progress').style.width = '80%';
-                await engine.init(enginedata);
-                document.getElementById('progress').style.width = '100%';
-                await engine.start({ args: ['--main-pack', gamedata], focusCanvas: true });
+                Promise.all([
+                    engine.preloadFile(gamedata),
+                    engine.init(enginedata)
+                ]).then(() => {
+                }).then(() => {
+                    document.getElementById('progress').style.width = '100%';
+                    return engine.start({ args: ['--main-pack', gamedata], focusCanvas: true });
+                }).then(() => {
+                    console.log("Godot Engine has started!")
+                });
             } catch (error) {
                 console.error(error);
             }
