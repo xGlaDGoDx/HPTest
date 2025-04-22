@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, user-scalable=no' />
-    <title>Clack-clack</title>
+    <title>HelpCoin</title>
     <script type="text/javascript" src="pako_inflate.min.js"></script>
     <style type="text/css">
         html {
@@ -13,35 +13,45 @@
 
         body {
             height: 100%;
-            background-color: black;
             background-repeat: no-repeat;
             background-position: center;
             overflow: hidden;
+        }
+
+        #logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #logo {
+            width: 500px;
+            height: 500px;
+            object-fit: contain;
         }
     </style>
 </head>
 
 <body>
-    <div style="width: 100%; background-color: #f77307;">
-        <div id="progress" style="width: 0%; height: 19px; background-color: #e21757;"></div>
+    <div id="logo-container">
+        <img id="logo" src="logo.png" alt="Logo">
     </div>
     <canvas id="canvas"></canvas>
     <script src="index.js"></script>
     <script>
-        document.getElementById('progress').style.width = '10%';
         const enginedata = "index";
         const gamedata = "index.pck";
         const engine = new Engine();
         async function loadAndInit() {
             try {
-                document.getElementById('progress').style.width = '50%';
                 Promise.all([
                     engine.preloadFile(gamedata),
                     engine.init(enginedata)
                 ]).then(() => {
-                    document.getElementById('progress').style.width = '100%';
                     return engine.start({ args: ['--main-pack', gamedata], focusCanvas: true });
                 }).then(() => {
+                    document.getElementById('logo-container').style.display = 'none';
                     console.log("Godot Engine has started!")
                 });
             } catch (error) {
