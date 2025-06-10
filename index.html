@@ -27,6 +27,9 @@
             transform: translate(-50%, -50%);
             max-width: 98vw;
             max-height: 98vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #logo {
@@ -35,36 +38,55 @@
             max-height: 100%;
             display: block;
         }
+
+        .spinner {
+            margin-top: 20px;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div id="logo-container">
-        <img id="logo" src="logo.png" alt="Logo">
-    </div>
-    <canvas id="canvas"></canvas>
-    <script src="index.js"></script>
-    <script>
-        const enginedata = "index";
-        const gamedata = "index.pck";
-        const engine = new Engine();
-        async function loadAndInit() {
-            try {
-                Promise.all([
-                    engine.preloadFile(gamedata),
-                    engine.init(enginedata)
-                ]).then(() => {
-                    return engine.start({ args: ['--main-pack', gamedata], focusCanvas: true });
-                }).then(() => {
-                    document.getElementById('logo-container').style.display = 'none';
-                    console.log("Godot Engine has started!")
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        loadAndInit();
-    </script>
-</body>
+<div id="logo-container">
+    <img id="logo" src="logo.png" alt="Logo">
+    <div class="spinner"></div>
+</div>
 
+<canvas id="canvas"></canvas>
+<script src="index.js"></script>
+<script>
+    const enginedata = "index";
+    const gamedata = "index.pck";
+    const engine = new Engine();
+
+    async function loadAndInit() {
+        try {
+            Promise.all([
+                engine.preloadFile(gamedata),
+                engine.init(enginedata)
+            ]).then(() => {
+                return engine.start({ args: ['--main-pack', gamedata], focusCanvas: true });
+            }).then(() => {
+                document.getElementById('logo-container').style.display = 'none';
+                console.log("Godot Engine has started!");
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    loadAndInit();
+</script>
+</body>
 </html>
